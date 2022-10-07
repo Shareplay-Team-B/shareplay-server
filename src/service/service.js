@@ -1,6 +1,9 @@
+import dotenv from 'dotenv';
+import path from 'path';
 import { MongoClient, ServerApiVersion } from 'mongodb';
 
-const uri = 'mongodb+srv://shareplayb:shareplaybdb@cluster0.bpnqtur.mongodb.net/?retryWrites=true&w=majority';
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+const uri = `mongodb+srv://shareplayb:${process.env.DB_PASS}@cluster0.bpnqtur.mongodb.net/?retryWrites=true&w=majority`;
 // eslint-disable-next-line max-len
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
