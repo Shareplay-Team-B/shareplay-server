@@ -27,10 +27,9 @@ const createServer = (httpServer) => {
     client.on('video-update', (data) => {
       // console.log('received socket data from client:', JSON.stringify(data));
       JSON.stringify(data);
-      console.log("sending data: ", data);
+      console.log('sending data: ', data);
       client.broadcast.emit(data);
     });
-
   });
 };
 
