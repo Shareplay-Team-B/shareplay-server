@@ -16,35 +16,26 @@ async function serverConnect() {
 }
 
 async function createNewUser(user, em, pass) {
-  try {
-    serverConnect();
-    const database = client.db('shareplay');
-    const collection = database.collection('users');
-    // make password into sha-256
-    const newPass = createHash('sha256').update(pass).digest('hex');
+  serverConnect();
+  const database = client.db('shareplay');
+  const collection = database.collection('users');
+  const newPass = createHash('sha256').update(pass).digest('hex');
 
-    const doc = { username: user, email: em, password: newPass };
-    const result = await collection.insertOne(doc);
-    console.log(`Document was successful inserted: ${result.insertedId}`);
-  } finally {
-    await client.close();
-  }
+  const doc = { username: user, email: em, password: newPass };
+  const result = await collection.insertOne(doc);
+  console.log(`Document was successful inserted: ${result.insertedId}`);
 }
 
 async function getAllUsers(user) {
-  try {
-    serverConnect();
-    const database = client.db('shareplay');
-    const collection = database.collection('users');
-    const query = { username: user };
-    if (await collection.countDocuments(query) > 0) {
-      return false;
-    // eslint-disable-next-line no-else-return
-    } else {
-      return true;
-    }
-  } finally {
-    await client.close();
+  serverConnect();
+  const database = client.db('shareplay');
+  const collection = database.collection('users');
+  const query = { username: user };
+  if (await collection.countDocuments(query) > 0) {
+    return false;
+  // eslint-disable-next-line no-else-return
+  } else {
+    return true;
   }
 }
 
