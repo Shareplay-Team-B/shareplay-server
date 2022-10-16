@@ -15,16 +15,18 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
  * Sign-in endpoint
  */
 AuthController.post('/api/v1/auth/sign-in', async (req, res) => {
-  // get firebase auth variables
   const email = req?.body?.email;
   const password = req?.body?.password;
 
   if (!email) {
-    res.status(400).json({ message: 'no email provided in request to server' });
-  } else if (!password) {
-    res.status(400).json({ message: 'no password provided in request to server' });
-  } else {
-    console.log('success');
+    res.status(400).json({ message: 'No email provided!' });
+    return;
+  }
+
+  if (!password) {
+    res.status(400).json({ message: 'No password provided!' });
+    // eslint-disable-next-line no-useless-return
+    return;
   }
 });
 
@@ -37,44 +39,50 @@ AuthController.post('/api/v1/auth/sign-up', async (req, res) => {
   const pass = req?.body?.password;
   const cpass = req?.body?.cpassword;
   const avalUser = await getAllUsers(user);
-  if (ema) {
-    if (user) {
-      if (pass) {
-        if (cpass) {
-          if (avalUser) {
-            if (pass === cpass) {
-              admin.auth()
-                .createUser({
-                  email: ema,
-                  password: pass,
-                })
-                .then(async () => {
-                  console.log('Successful in creating user: ', ema);
-                  await createNewUser(user, ema, pass);
-                  res.status(200).json({ message: 'Successful in creating user.' });
-                })
-                .catch((error) => {
-                  res.status(400).json({ message: error.errorInfo.message });
-                });
-            } else {
-              res.status(400).json({ message: 'Password and confirm password do not match!' });
-            }
-          } else {
-            res.status(400).json({ message: 'Username is not available!' });
-            console.log('Username is not available!');
-          }
-        } else {
-          res.status(400).json({ message: 'No confirm password provided!' });
-        }
-      } else {
-        res.status(400).json({ message: 'No password provided!' });
-      }
-    } else {
-      res.status(400).json({ message: 'No username provided!' });
-    }
-  } else {
+
+  if (!ema) {
     res.status(400).json({ message: 'No email provided!' });
+    return;
   }
+
+  if (!user) {
+    res.status(400).json({ message: 'No username provided!' });
+    return;
+  }
+
+  if (!pass) {
+    res.status(400).json({ message: 'No password provided!' });
+    return;
+  }
+
+  if (!cpass) {
+    res.status(400).json({ message: 'No confirm password provided!' });
+    return;
+  }
+
+  if (!avalUser) {
+    res.status(400).json({ message: 'Username is not available!' });
+    return;
+  }
+
+  if (pass !== cpass) {
+    res.status(400).json({ message: 'Passwords do not match!' });
+    return;
+  }
+
+  admin.auth()
+    .createUser({
+      email: ema,
+      password: pass,
+    })
+    .then(async () => {
+      console.log('Successful in creating user: ', ema);
+      await createNewUser(user, ema, pass);
+      res.status(200).json({ message: 'Successful in creating user.' });
+    })
+    .catch((error) => {
+      res.status(400).json({ message: error.errorInfo.message });
+    });
 });
 
 export default AuthController;
