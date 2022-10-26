@@ -9,9 +9,19 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 // create express application
 const app = express();
 
-admin.initializeApp({
-  credential: admin.credential.cert(process.env.GOOGLE_APPLICATION_CREDENTIALS),
-});
+if (!process.env.DB_PASS) {
+  console.error('DB_PASS environment variable not defined');
+  process.exit(1);
+}
+
+if (!process.env.FIREBASE_ADMIN_SDK) {
+  console.error('FIREBASE_ADMIN_SDK environment variable not defined');
+  process.exit(1);
+}
+
+const adminSdkCredentials = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
+adminSdkCredentials.private_key = adminSdkCredentials.private_key.replace(/\\n/g, '\n');
+admin.initializeApp(adminSdkCredentials);
 
 // routes
 app.use(AuthController);
