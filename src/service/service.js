@@ -12,7 +12,7 @@ async function serverConnect() {
   await client.connect();
   // Establish and verify connection
   await client.db('shareplay').command({ ping: 1 });
-  console.log('Connected successfully to server');
+  console.log('Connected successfully to mongodb server');
 }
 
 async function createNewUser(user, em, pass) {

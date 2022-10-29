@@ -21,7 +21,9 @@ if (!process.env.FIREBASE_ADMIN_SDK) {
 
 const adminSdkCredentials = JSON.parse(process.env.FIREBASE_ADMIN_SDK);
 adminSdkCredentials.private_key = adminSdkCredentials.private_key.replace(/\\n/g, '\n');
-admin.initializeApp(adminSdkCredentials);
+admin.initializeApp({
+  credential: admin.credential.cert(adminSdkCredentials),
+});
 
 // routes
 app.use(AuthController);
