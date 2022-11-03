@@ -27,6 +27,10 @@ const createServer = (httpServer) => {
       console.log('sending data: ', data);
       client.broadcast.emit('video-update-client', data);
     });
+
+    client.on('text-channel', (data) => {
+      client.broadcast.emit('text-channel-client', data);
+    });
   });
 };
 
