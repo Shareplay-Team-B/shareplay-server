@@ -30,7 +30,12 @@ const createServer = (httpServer) => {
 
     client.on('text-session', (data) => {
       console.log(data.state);
-      client.broadcast.emit('text-session-client', data.state);
+      client.to(data.code).emit('text-session-client', data.state);
+    });
+
+    client.on('join-session', (data) => {
+      client.join(data);
+      console.log('Joined room: ', data);
     });
   });
 };

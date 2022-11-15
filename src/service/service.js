@@ -39,4 +39,15 @@ async function getAllUsers(user) {
   }
 }
 
-export { createNewUser, getAllUsers };
+async function getUser(ema) {
+  serverConnect();
+  const items = [];
+  const database = client.db('shareplay');
+  const collection = database.collection('users');
+  const query = { email: ema };
+  const cursor = collection.find(query);
+  await cursor.forEach((doc) => items.push(doc));
+  return items[0].username;
+}
+
+export { createNewUser, getAllUsers, getUser };
