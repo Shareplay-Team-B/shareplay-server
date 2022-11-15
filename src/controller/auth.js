@@ -4,7 +4,7 @@ import cors from 'cors';
 import bodyParser from 'body-parser';
 import * as admin from 'firebase-admin';
 import path from 'path';
-import { createNewUser, getAllUsers } from '../service/service';
+import { createNewUser, getAllUsers, getUser } from '../service/service';
 
 const AuthController = express.Router();
 AuthController.use(cors({ origin: '*' }));
@@ -16,18 +16,15 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
  */
 AuthController.post('/api/v1/auth/sign-in', async (req, res) => {
   const email = req?.body?.email;
-  const password = req?.body?.password;
 
   if (!email) {
     res.status(400).json({ message: 'No email provided!' });
     return;
   }
 
-  if (!password) {
-    res.status(400).json({ message: 'No password provided!' });
-    // eslint-disable-next-line no-useless-return
-    return;
-  }
+  const username = await getUser(email);
+  console.log(username);
+  res.status(202).json({ message: username });
 });
 
 /**
@@ -78,7 +75,7 @@ AuthController.post('/api/v1/auth/sign-up', async (req, res) => {
     .then(async () => {
       console.log('Successful in creating user: ', ema);
       await createNewUser(user, ema, pass);
-      res.status(200).json({ message: 'Successful in creating user.' });
+      res.status(202).json({ message: 'Successful in creating user.' });
     })
     .catch((error) => {
       res.status(400).json({ message: error.errorInfo.message });

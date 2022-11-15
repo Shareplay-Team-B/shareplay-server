@@ -24,12 +24,18 @@ const createServer = (httpServer) => {
     });
 
     client.on('video-update', (data) => {
-      console.log('sending data: ', data);
+      // console.log('sending data: ', data);
       client.broadcast.emit('video-update-client', data);
     });
 
-    client.on('text-channel', (data) => {
-      client.broadcast.emit('text-channel-client', data);
+    client.on('text-session', (data) => {
+      console.log(data.state);
+      client.to(data.code).emit('text-session-client', data.state);
+    });
+
+    client.on('join-session', (data) => {
+      client.join(data);
+      console.log('Joined room: ', data);
     });
   });
 };
