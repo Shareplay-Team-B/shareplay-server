@@ -29,8 +29,7 @@ const createServer = (httpServer) => {
     });
 
     client.on('text-session', (data) => {
-      console.log(data.state);
-      client.to(data.code).emit('text-session-client', data.state);
+      io.client.in(data.code).emit('text-session-client', { message: data.state });
     });
 
     client.on('join-session', (data) => {
