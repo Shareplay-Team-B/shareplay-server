@@ -9,10 +9,14 @@ const uri = `mongodb+srv://shareplayb:${process.env.DB_PASS}@cluster0.bpnqtur.mo
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 
 async function serverConnect() {
-  await client.connect();
-  // Establish and verify connection
-  await client.db('shareplay').command({ ping: 1 });
-  console.log('Connected successfully to mongodb server');
+  try {
+    client.connect();
+    // Establish and verify connection
+    client.db('shareplay').command({ ping: 1 });
+    console.log('Connected successfully to mongodb server');
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 async function createNewUser(user, em, pass) {
