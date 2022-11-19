@@ -39,8 +39,12 @@ const createServer = (httpServer) => {
     });
 
     client.on('leave-session', (data) => {
-      client.leave(data);
-      io.in(data).emit('text-session-client', { message: 'user left', sender: 'computer' });
+      client.leave(data.code);
+      if (data.host === 'me') {
+        io.in(data.code).emit('host-left-session', data.code);
+      } else {
+        io.in(data.code).emit('text-session-client', { message: 'user left', sender: 'computer' });
+      }
       console.log('Left room: ', data);
     });
   });
