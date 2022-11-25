@@ -25,17 +25,27 @@ const createServer = (httpServer) => {
 
     client.on('video-update', (data) => {
       // console.log('sending data: ', data);
-      client.broadcast.emit('video-update-client', data);
+      io.in(data.code).emit('video-update-client', { action: data.action, time: data.time });
     });
 
     client.on('text-session', (data) => {
-      console.log(data.state);
-      client.to(data.code).emit('text-session-client', data.state);
+      io.in(data.code).emit('text-session-client', { message: data.state, sender: data.name });
     });
 
     client.on('join-session', (data) => {
       client.join(data);
+      io.in(data).emit('text-session-client', { message: 'user joined', sender: 'computer' });
       console.log('Joined room: ', data);
+    });
+
+    client.on('leave-session', (data) => {
+      client.leave(data.code);
+      if (data.host === 'me') {
+        io.in(data.code).emit('host-left-session', data.code);
+      } else {
+        io.in(data.code).emit('text-session-client', { message: 'user left', sender: 'computer' });
+      }
+      console.log('Left room: ', data);
     });
   });
 };
