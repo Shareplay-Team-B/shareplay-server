@@ -45,7 +45,7 @@ const createServer = (httpServer) => {
       } else {
         io.in(data.code).emit('text-session-client', { message: 'user left', sender: 'computer' });
       }
-      console.log('Left room: ', data);
+      console.log('Left room: ', data.code);
     });
   });
 };
