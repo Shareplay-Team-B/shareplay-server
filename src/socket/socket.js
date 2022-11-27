@@ -24,8 +24,7 @@ const createServer = (httpServer) => {
     });
 
     client.on('video-update', (data) => {
-      // console.log('sending data: ', data);
-      io.in(data.code).emit('video-update-client', { action: data.action, time: data.time });
+      client.broadcast.to(data.code).emit('video-update-client', { action: data.action, time: data.time });
     });
 
     client.on('text-session', (data) => {
