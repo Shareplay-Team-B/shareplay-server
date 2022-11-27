@@ -5,8 +5,9 @@
   "main": "./src/server.js",
   "scripts": {
     "build": "node build-scripts/build.js",
-    "prestart": "npm run build",
-    "start": "npm-run-all --parallel watch:build watch:server",
+    "predev": "npm run build",
+    "start": "node dist/server.bundle.js",
+    "dev": "npm-run-all --parallel watch:build watch:server",
     "watch:build": "node build-scripts/webpack.js",
     "watch:server": "nodemon \"./dist/server.bundle.js\" --watch \"./dist\""
   },
@@ -32,9 +33,7 @@
     "swagger-autogen": "^2.21.8",
     "swagger-jsdoc": "^6.2.5",
     "swagger-ui-express": "^4.5.0",
-    "webpack-dev-server": "^4.11.0"
-  },
-  "devDependencies": {
+    "webpack-dev-server": "^4.11.0",
     "@babel/core": "^7.15.8",
     "@babel/plugin-proposal-class-properties": "^7.14.5",
     "@babel/preset-env": "^7.15.8",
