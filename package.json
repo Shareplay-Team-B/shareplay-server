@@ -5,8 +5,9 @@
   "main": "./src/server.js",
   "scripts": {
     "build": "node build-scripts/build.js",
-    "prestart": "npm run build",
-    "start": "npm-run-all --parallel watch:build watch:server",
+    "predev": "npm run build",
+    "start": "node dist/server.bundle.js",
+    "dev": "npm-run-all --parallel watch:build watch:server",
     "watch:build": "node build-scripts/webpack.js",
     "watch:server": "nodemon \"./dist/server.bundle.js\" --watch \"./dist\""
   },
